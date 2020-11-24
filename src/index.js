@@ -14,7 +14,22 @@ function fetchMovies() {
     .then((movies) => movies.forEach((movie) => renderMovie(movie)));
 }
 
-function renderMovie(movie) {}
+function renderMovie(movie) {
+  let filmsDiv = document.getElementById("films");
+
+  let div = document.createElement("div");
+  div.id = `movie-${movie.id}`;
+  div.addEventListener("click", () => fetchMovieDetails(movie.id));
+  if (+movie.capacity - movie.tickets_sold <= 0) {
+    div.className = "sold-out film item";
+  } else {
+    div.className = "film item";
+  }
+
+  div.innerText = movie.title.toUpperCase();
+
+  filmsDiv.appendChild(div);
+}
 
 function fetchMovieDetails(id) {
   fetch(`${url}/${id}`)
@@ -92,5 +107,10 @@ function handleClickBuyTicket() {
       document.getElementById("ticket-num").innerText =
         movieCap - movie.tickets_sold;
       buyButtonTicketEvent();
+
+      if (movieCap - movie.tickets_sold <= 0) {
+        let movieDiv = document.getElementById(`movie-${movie.id}`);
+        movieDiv.className = "sold-out film item";
+      }
     });
 }
